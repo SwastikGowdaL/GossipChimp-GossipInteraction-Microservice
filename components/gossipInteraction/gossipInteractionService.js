@@ -21,6 +21,30 @@ const regossipGossip = async (postID, userID) => {
   }
 };
 
+const retrieveMostLikedGossips = async () => {
+  try {
+    const isMostLikedGossipsCached = await gossipInteractionDAL.doesKeyExist(
+      'mostLikedGossips'
+    );
+    if (isMostLikedGossipsCached) {
+      return await gossipInteractionDAL.retrieveCachedListData(
+        'mostLikedGossips'
+      );
+    }
+    const mostLikedGossips = await gossipInteractionDAL.mostLikedGossips();
+    const result = [];
+    for (const item of mostLikedGossips) {
+      result.push(JSON.stringify(item));
+    }
+    await gossipInteractionDAL.cacheListData('mostLikedGossips', result);
+    await gossipInteractionDAL.setExpiry('mostLikedGossips');
+    return mostLikedGossips;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 module.exports = {
   regossipGossip,
+  retrieveMostLikedGossips,
 };

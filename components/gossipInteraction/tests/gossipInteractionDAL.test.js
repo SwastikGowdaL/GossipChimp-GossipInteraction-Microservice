@@ -126,3 +126,55 @@ test('update users bookmarked list', async () => {
     );
   expect(userBookmarkedPost).toMatchObject(expectedUpdateResultIfAlreadyExists);
 });
+
+test('most likes gossips', async () => {
+  const mostLikedGossips = await gossipInteractionDAL.mostLikedGossips();
+  expect(mostLikedGossips).not.toBeFalsy();
+});
+
+test('most commented gossips', async () => {
+  const mostCommentedGossips =
+    await gossipInteractionDAL.mostCommentedGossips();
+  expect(mostCommentedGossips).not.toBeFalsy();
+});
+
+test('most Regossiped gossips', async () => {
+  const mostRegossipedGossips =
+    await gossipInteractionDAL.mostRegossipedGossips();
+  expect(mostRegossipedGossips).not.toBeFalsy();
+});
+
+test('most Shared gossips', async () => {
+  const mostSharedGossips = await gossipInteractionDAL.mostSharedGossips();
+  expect(mostSharedGossips).not.toBeFalsy();
+});
+
+// test('doesKeyExist', async () => {
+//   const isMostSharedGossipsCached = await gossipInteractionDAL.doesKeyExist(
+//     'mostSharedGossips'
+//   );
+//   console.log(isMostSharedGossipsCached);
+//   expect(isMostSharedGossipsCached).toBeFalsy();
+// });
+
+test('set List data', async () => {
+  const cacheMostCommentedGossips = await gossipInteractionDAL.cacheListData(
+    'mostCommentedGossips',
+    [JSON.stringify({ test: 'test' }), JSON.stringify({ test: 'test' })]
+  );
+  expect(cacheMostCommentedGossips).not.toBeFalsy();
+});
+
+test('setting expiry', async () => {
+  const setExpiry = await gossipInteractionDAL.setExpiry(
+    'mostCommentedGossips'
+  );
+  expect(setExpiry).not.toBeFalsy();
+});
+
+test('retrieve cached data', async () => {
+  const cachedData = await gossipInteractionDAL.retrieveCachedListData(
+    'testing'
+  );
+  expect(cachedData).not.toBeFalsy();
+});
