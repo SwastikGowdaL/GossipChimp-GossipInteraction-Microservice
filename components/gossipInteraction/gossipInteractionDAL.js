@@ -66,6 +66,16 @@ const updatePostBookmarks = async (postID, userID) =>
     }
   );
 
+const updatePostReports = async (postID, userID) =>
+  Gossip.updateOne(
+    {
+      _id: postID,
+    },
+    {
+      $addToSet: { reports: userID },
+    }
+  );
+
 const updateUsersLikedList = async (postID, userID) =>
   Users.updateOne(
     {
@@ -93,6 +103,26 @@ const updateUsersCommentedList = async (postID, userID) =>
     },
     {
       $addToSet: { commented_gossips: postID },
+    }
+  );
+
+const updateUsersRegossipedList = async (postID, userID) =>
+  Users.updateOne(
+    {
+      _id: userID,
+    },
+    {
+      $addToSet: { regossiped_gossips: postID },
+    }
+  );
+
+const updateUsersReportedList = async (postID, userID) =>
+  Users.updateOne(
+    {
+      _id: userID,
+    },
+    {
+      $addToSet: { reported_gossips: postID },
     }
   );
 
@@ -154,6 +184,42 @@ const retrieveCachedListData = async (key) =>
     });
   });
 
+const checkIfAlreadyRegossiped = async (postID, userID) =>
+  Gossip.find({
+    _id: postID,
+    regossips: { $in: [`${userID}`] },
+  }).count();
+
+const unlikePost = async (postID, userID) =>
+  Gossip.updateOne({ _id: postID }, { $pull: { likes: userID } });
+
+const unlikeFromUsersLikedList = async (postID, userID) =>
+  Users.updateOne({ _id: userID }, { $pull: { liked_gossips: postID } });
+
+const uncommentPost = async (postID, userID) =>
+  Gossip.updateOne(
+    { _id: postID },
+    { $pull: { comments: { commenter_id: userID } } }
+  );
+
+const uncommentFromUsersCommentedList = async (postID, userID) =>
+  Users.updateOne({ _id: userID }, { $pull: { commented_gossips: postID } });
+
+const unbookmarkPost = async (postID, userID) =>
+  Gossip.updateOne({ _id: postID }, { $pull: { bookmarks: userID } });
+
+const unbookmarkFromUsersBookmarkedList = async (postID, userID) =>
+  Users.updateOne({ _id: userID }, { $pull: { bookmarked_gossips: postID } });
+
+const unreportPost = async (postID, userID) =>
+  Gossip.updateOne({ _id: postID }, { $pull: { reports: userID } });
+
+const unreportFromUsersReportedList = async (postID, userID) =>
+  Users.updateOne({ _id: userID }, { $pull: { reported_gossips: postID } });
+
+const queryLikedGossipsID = async (userID) =>
+  Users.find({ _id: userID }, { liked_gossips: 1 });
+
 module.exports = {
   updatePostLikes,
   updatePostShares,
@@ -174,4 +240,17 @@ module.exports = {
   cacheListData,
   setExpiry,
   retrieveCachedListData,
+  checkIfAlreadyRegossiped,
+  updateUsersRegossipedList,
+  updateUsersReportedList,
+  updatePostReports,
+  unlikePost,
+  unlikeFromUsersLikedList,
+  uncommentPost,
+  uncommentFromUsersCommentedList,
+  unbookmarkPost,
+  unbookmarkFromUsersBookmarkedList,
+  unreportPost,
+  unreportFromUsersReportedList,
+  queryLikedGossipsID,
 };

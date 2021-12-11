@@ -153,7 +153,6 @@ test('most Shared gossips', async () => {
 //   const isMostSharedGossipsCached = await gossipInteractionDAL.doesKeyExist(
 //     'mostSharedGossips'
 //   );
-//   console.log(isMostSharedGossipsCached);
 //   expect(isMostSharedGossipsCached).toBeFalsy();
 // });
 
@@ -177,4 +176,105 @@ test('retrieve cached data', async () => {
     'testing'
   );
   expect(cachedData).not.toBeFalsy();
+});
+
+test('check if already regossiped for true', async () => {
+  const alreadyRegossiped = await gossipInteractionDAL.checkIfAlreadyRegossiped(
+    '617fa207f6627d2599288c30',
+    '617fc7e5e8bee9ff94617ab0'
+  );
+  expect(alreadyRegossiped).toBe(1);
+});
+
+test('check if already regossiped for false', async () => {
+  const alreadyRegossiped = await gossipInteractionDAL.checkIfAlreadyRegossiped(
+    '617fa207f6627d2599288c30',
+    '617fc7e5e8bee9ff94617ab1'
+  );
+  expect(alreadyRegossiped).toBe(0);
+});
+
+test('unlike gossip', async () => {
+  const unliked = await gossipInteractionDAL.unlikePost(
+    '617fa207f6627d2599288c30',
+    '617fc7e5e8bee9ff94617ab2'
+  );
+  expect(unliked).not.toBeFalsy();
+});
+
+test('unlike from users liked list', async () => {
+  const unlikeFromUsersLikedList =
+    await gossipInteractionDAL.unlikeFromUsersLikedList(
+      '617fa207f6627d2599288c30',
+      '617fc7e5e8bee9ff94617ab2'
+    );
+  expect(unlikeFromUsersLikedList).not.toBeFalsy();
+});
+
+test('uncomment gossip', async () => {
+  const uncommented = await gossipInteractionDAL.uncommentPost(
+    '617fa207f6627d2599288c30',
+    '617fc7e5e8bee9ff94617ab2'
+  );
+  expect(uncommented).not.toBeFalsy();
+});
+
+test('uncomment from users Commented list', async () => {
+  const uncommentFromUsersCommentedList =
+    await gossipInteractionDAL.uncommentFromUsersCommentedList(
+      '617fa207f6627d2599288c30',
+      '617fc7e5e8bee9ff94617ab2'
+    );
+  expect(uncommentFromUsersCommentedList).not.toBeFalsy();
+});
+
+test('unbookmark gossip', async () => {
+  const unbookmarked = await gossipInteractionDAL.unbookmarkPost(
+    '617fa207f6627d2599288c30',
+    '617fc7e5e8bee9ff94617ab2'
+  );
+  expect(unbookmarked).not.toBeFalsy();
+});
+
+test('unbookmark from users Bookmarked list', async () => {
+  const unbookmarkFromUsersBookmarkedList =
+    await gossipInteractionDAL.unbookmarkFromUsersBookmarkedList(
+      '617fa207f6627d2599288c30',
+      '617fc7e5e8bee9ff94617ab2'
+    );
+  expect(unbookmarkFromUsersBookmarkedList).not.toBeFalsy();
+});
+
+test('unreport gossip', async () => {
+  const unreported = await gossipInteractionDAL.unreportPost(
+    '617fa207f6627d2599288c30',
+    '617fc7e5e8bee9ff94617ab2'
+  );
+  expect(unreported).not.toBeFalsy();
+});
+
+test('unreport from users Reported list', async () => {
+  const unreportFromUsersReportedList =
+    await gossipInteractionDAL.unreportFromUsersReportedList(
+      '617fa207f6627d2599288c30',
+      '617fc7e5e8bee9ff94617ab2'
+    );
+  expect(unreportFromUsersReportedList).not.toBeFalsy();
+});
+
+test('update users regossiped list ', async () => {
+  const updateUsersRegossipedList =
+    await gossipInteractionDAL.updateUsersRegossipedList(
+      '617fa207f6627d2599288c30',
+      '617fc7e5e8bee9ff94617ab2'
+    );
+  expect(updateUsersRegossipedList).not.toBeFalsy();
+});
+
+test('query liked gossips ID', async () => {
+  const likedGossips = await gossipInteractionDAL.queryLikedGossipsID(
+    '617fc7e5e8bee9ff94617ab0'
+  );
+  console.log(likedGossips);
+  expect(likedGossips).not.toBeFalsy();
 });
