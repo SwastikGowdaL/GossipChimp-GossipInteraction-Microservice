@@ -220,6 +220,15 @@ const unreportFromUsersReportedList = async (postID, userID) =>
 const queryLikedGossipsID = async (userID) =>
   Users.find({ _id: userID }, { liked_gossips: 1 });
 
+const queryCommentedGossipsID = async (userID) =>
+  Users.find({ _id: userID }, { commented_gossips: 1 });
+
+const queryBookmarkedGossipsID = async (userID) =>
+  Users.find({ _id: userID }, { bookmarked_gossips: 1 });
+
+const queryRegossipedGossipsID = async (userID) =>
+  Users.find({ _id: userID }, { regossiped_gossips: 1 });
+
 module.exports = {
   updatePostLikes,
   updatePostShares,
@@ -253,4 +262,7 @@ module.exports = {
   unreportPost,
   unreportFromUsersReportedList,
   queryLikedGossipsID,
+  queryCommentedGossipsID,
+  queryBookmarkedGossipsID,
+  queryRegossipedGossipsID,
 };

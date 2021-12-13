@@ -117,3 +117,31 @@ test('retrieveLikedGossips', async () => {
   );
   expect(likedGossips).not.toBeFalsy();
 });
+
+test('retrieveCommentedGossips', async () => {
+  const commentedGossips =
+    await gossipInteractionService.retrieveCommentedGossips(
+      '617fc7e5e8bee9ff94617ab0',
+      0
+    );
+  expect(commentedGossips).not.toBeFalsy();
+});
+
+test('retrieveBookmarkedGossips', async () => {
+  const bookmarkedGossips =
+    await gossipInteractionService.retrieveBookmarkedGossips(
+      '617fc7e5e8bee9ff94617ab0',
+      0
+    );
+  expect(bookmarkedGossips).not.toBeFalsy();
+});
+
+test('retrieveRegossipedGossips', async () => {
+  const regossipedGossips =
+    await gossipInteractionService.retrieveRegossipedGossips(
+      '617fc7e5e8bee9ff94617ab2',
+      0
+    );
+  console.log(regossipedGossips);
+  expect(regossipedGossips).not.toBeFalsy();
+});

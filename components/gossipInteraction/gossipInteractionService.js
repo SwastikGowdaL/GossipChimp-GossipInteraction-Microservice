@@ -240,6 +240,51 @@ const retrieveLikedGossips = async (userID, skip) => {
   }
 };
 
+const retrieveCommentedGossips = async (userID, skip) => {
+  try {
+    const commentedGossipsID =
+      await gossipInteractionDAL.queryCommentedGossipsID(userID);
+    if (commentedGossipsID[0].commented_gossips.length <= 10) {
+      return await retrieveGossip(commentedGossipsID[0].commented_gossips);
+    }
+    return await retrieveGossip(
+      commentedGossipsID[0].commented_gossips.slice(skip, skip + 10)
+    );
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const retrieveBookmarkedGossips = async (userID, skip) => {
+  try {
+    const bookmarkedGossipsID =
+      await gossipInteractionDAL.queryBookmarkedGossipsID(userID);
+    if (bookmarkedGossipsID[0].bookmarked_gossips.length <= 10) {
+      return await retrieveGossip(bookmarkedGossipsID[0].bookmarked_gossips);
+    }
+    return await retrieveGossip(
+      bookmarkedGossipsID[0].bookmarked_gossips.slice(skip, skip + 10)
+    );
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const retrieveRegossipedGossips = async (userID, skip) => {
+  try {
+    const regossipedGossipsID =
+      await gossipInteractionDAL.queryRegossipedGossipsID(userID);
+    if (regossipedGossipsID[0].regossiped_gossips.length <= 10) {
+      return await retrieveGossip(regossipedGossipsID[0].regossiped_gossips);
+    }
+    return await retrieveGossip(
+      regossipedGossipsID[0].regossiped_gossips.slice(skip, skip + 10)
+    );
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 module.exports = {
   regossipGossip,
   retrieveMostLikedGossips,
@@ -256,4 +301,7 @@ module.exports = {
   unbookmarkPost,
   unreportPost,
   retrieveLikedGossips,
+  retrieveCommentedGossips,
+  retrieveBookmarkedGossips,
+  retrieveRegossipedGossips,
 };

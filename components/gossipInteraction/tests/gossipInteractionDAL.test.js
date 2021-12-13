@@ -275,6 +275,26 @@ test('query liked gossips ID', async () => {
   const likedGossips = await gossipInteractionDAL.queryLikedGossipsID(
     '617fc7e5e8bee9ff94617ab0'
   );
-  console.log(likedGossips);
   expect(likedGossips).not.toBeFalsy();
+});
+
+test('query commented gossips ID', async () => {
+  const commentedGossips = await gossipInteractionDAL.queryCommentedGossipsID(
+    '617fc7e5e8bee9ff94617ab0'
+  );
+  expect(commentedGossips).not.toBeFalsy();
+});
+
+test('query bookmarked gossips ID', async () => {
+  const bookmarkedGossips = await gossipInteractionDAL.queryBookmarkedGossipsID(
+    '617fc7e5e8bee9ff94617ab0'
+  );
+  expect(bookmarkedGossips).not.toBeFalsy();
+});
+
+test('query regossiped gossips ID', async () => {
+  const regossipedGossips = await gossipInteractionDAL.queryRegossipedGossipsID(
+    '617fc7e5e8bee9ff94617ab2'
+  );
+  expect(regossipedGossips).not.toBeFalsy();
 });
