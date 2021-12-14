@@ -285,6 +285,26 @@ const retrieveRegossipedGossips = async (userID, skip) => {
   }
 };
 
+const retrieveUserDetails = async (userID) => {
+  try {
+    let userDetails = await gossipInteractionDAL.queryUserDetails(userID);
+    userDetails = JSON.parse(JSON.stringify(userDetails));
+    delete userDetails.password;
+    delete userDetails._id;
+    delete userDetails.liked_gossips;
+    delete userDetails.commented_gossips;
+    delete userDetails.reported_gossips;
+    delete userDetails.regossiped_gossips;
+    delete userDetails.bookmarked_gossips;
+    delete userDetails.notifications;
+    delete userDetails.settings;
+    delete userDetails.__v;
+    return userDetails;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 module.exports = {
   regossipGossip,
   retrieveMostLikedGossips,
@@ -304,4 +324,5 @@ module.exports = {
   retrieveCommentedGossips,
   retrieveBookmarkedGossips,
   retrieveRegossipedGossips,
+  retrieveUserDetails,
 };

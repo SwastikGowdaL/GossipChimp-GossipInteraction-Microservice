@@ -142,6 +142,12 @@ test('retrieveRegossipedGossips', async () => {
       '617fc7e5e8bee9ff94617ab2',
       0
     );
-  console.log(regossipedGossips);
   expect(regossipedGossips).not.toBeFalsy();
+});
+
+test('retrieve users details', async () => {
+  const userDetails = await gossipInteractionService.retrieveUserDetails(
+    '617fc7e5e8bee9ff94617ab2'
+  );
+  expect(userDetails).not.toBeFalsy();
 });
