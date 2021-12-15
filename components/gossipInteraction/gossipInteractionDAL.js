@@ -1,6 +1,7 @@
 require('../../db/mongoose');
 const Gossip = require('../../models/gossip');
 const Users = require('../../models/users');
+const FollowingList = require('../../models/followingList');
 
 const redisClient = require('./helpers/redisClient');
 
@@ -229,6 +230,24 @@ const queryBookmarkedGossipsID = async (userID) =>
 const queryRegossipedGossipsID = async (userID) =>
   Users.find({ _id: userID }, { regossiped_gossips: 1 });
 
+const updateFollowingList = async (userID, followingUserID) =>
+  FollowingList.updateOne(
+    {
+      _id: userID,
+    },
+    {
+      $addToSet: {
+        'following_list.medium_priority_list': {
+          author_id: followingUserID,
+          interaction_points: 0,
+        },
+      },
+    }
+  );
+
+const queryUsersFollowingList = async (userID) =>
+  FollowingList.findOne({ user_id: userID });
+
 module.exports = {
   updatePostLikes,
   updatePostShares,
@@ -265,4 +284,6 @@ module.exports = {
   queryCommentedGossipsID,
   queryBookmarkedGossipsID,
   queryRegossipedGossipsID,
+  updateFollowingList,
+  queryUsersFollowingList,
 };

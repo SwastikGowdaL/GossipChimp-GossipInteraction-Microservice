@@ -298,3 +298,19 @@ test('query regossiped gossips ID', async () => {
   );
   expect(regossipedGossips).not.toBeFalsy();
 });
+
+test('update user following list', async () => {
+  const updatedFollowingList = await gossipInteractionDAL.updateFollowingList(
+    '617fc7e5e8bee9ff94617ab0',
+    '617fc7e5e8bee9ff94617ab1'
+  );
+  expect(updatedFollowingList).not.toBeFalsy();
+});
+
+test('query User Following List', async () => {
+  const userFollowingList = await gossipInteractionDAL.queryUsersFollowingList(
+    '617fc7e5e8bee9ff94617ab0'
+  );
+  console.log(userFollowingList);
+  expect(userFollowingList).not.toBeFalsy();
+});
