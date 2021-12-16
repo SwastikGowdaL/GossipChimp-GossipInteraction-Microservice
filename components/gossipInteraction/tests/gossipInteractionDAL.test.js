@@ -299,18 +299,43 @@ test('query regossiped gossips ID', async () => {
   expect(regossipedGossips).not.toBeFalsy();
 });
 
-test('update user following list', async () => {
-  const updatedFollowingList = await gossipInteractionDAL.updateFollowingList(
-    '617fc7e5e8bee9ff94617ab0',
-    '617fc7e5e8bee9ff94617ab1'
-  );
-  expect(updatedFollowingList).not.toBeFalsy();
-});
+// test('update user following list', async () => {
+//   const updatedFollowingList = await gossipInteractionDAL.updateFollowingList(
+//     '617fc7e5e8bee9ff94617ab0',
+//     '617fc7e5e8bee9ff94617ab1'
+//   );
+//   expect(updatedFollowingList).not.toBeFalsy();
+// });
 
 test('query User Following List', async () => {
   const userFollowingList = await gossipInteractionDAL.queryUsersFollowingList(
     '617fc7e5e8bee9ff94617ab0'
   );
-  console.log(userFollowingList);
   expect(userFollowingList).not.toBeFalsy();
+});
+
+test('remove User From Following List', async () => {
+  let removedUser = await gossipInteractionDAL.removeUserFromHighPriorityList(
+    '617fc7e5e8bee9ff94617ab0',
+    '617fc7e5e8bee9ff94617ab2'
+  );
+  expect(removedUser).not.toBeFalsy();
+  removedUser = await gossipInteractionDAL.removeUserFromMediumPriorityList(
+    '617fc7e5e8bee9ff94617ab0',
+    '617fc7e5e8bee9ff94617ab2'
+  );
+  expect(removedUser).not.toBeFalsy();
+  removedUser = await gossipInteractionDAL.removeUserFromLowPriorityList(
+    '617fc7e5e8bee9ff94617ab0',
+    'author_id4'
+  );
+  expect(removedUser).not.toBeFalsy();
+});
+
+test('query bare min user details', async () => {
+  const userDetails = await gossipInteractionDAL.queryBareMinUserID(
+    '617fc7e5e8bee9ff94617ab0'
+  );
+  console.log(userDetails);
+  expect(userDetails).not.toBeFalsy();
 });

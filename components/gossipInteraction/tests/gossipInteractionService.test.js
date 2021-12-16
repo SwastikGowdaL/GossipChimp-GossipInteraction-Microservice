@@ -151,3 +151,30 @@ test('retrieve users details', async () => {
   );
   expect(userDetails).not.toBeFalsy();
 });
+
+test('check whether user following ', async () => {
+  const userFollowing =
+    await gossipInteractionService.checkWhetherUserFollowing(
+      '617fc7e5e8bee9ff94617ab0',
+      '617fc7e5e8bee9ff94617ab1'
+    );
+  expect(userFollowing).not.toBeFalsy();
+});
+
+test('follow or unfollow userID', async () => {
+  const updateList = await gossipInteractionService.followOrUnfollowUser(
+    '617fc7e5e8bee9ff94617ab0',
+    '617fc7e5e8bee9ff94617ab2'
+  );
+  expect(updateList).not.toBeFalsy();
+});
+
+test('retrieve user following list', async () => {
+  const followingList =
+    await gossipInteractionService.retrieveUserFollowingList(
+      '617fc7e5e8bee9ff94617ab0',
+      1
+    );
+  console.log(followingList);
+  expect(followingList).not.toBeFalsy();
+});

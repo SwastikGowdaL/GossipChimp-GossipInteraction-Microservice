@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 const gossipInteractionDAL = require('./gossipInteractionDAL');
+const helpers = require('./helpers');
 
 const regossipGossip = async (postID, userID) => {
   try {
@@ -305,6 +306,149 @@ const retrieveUserDetails = async (userID) => {
   }
 };
 
+const checkWhetherUserFollowing = async (userID, followingUserID) => {
+  try {
+    const userFollowingList =
+      await gossipInteractionDAL.queryUsersFollowingList(userID);
+    const followingList = JSON.parse(
+      JSON.stringify(userFollowingList.following_list)
+    );
+
+    //* checking whether high priority list exists
+    if (
+      Object.prototype.hasOwnProperty.call(followingList, 'high_priority_list')
+    ) {
+      const alreadyFollowing = helpers.itemExists(
+        followingList.high_priority_list,
+        followingUserID
+      );
+      if (alreadyFollowing) return true;
+    }
+
+    //* checking whether medium priority list exists
+    if (
+      Object.prototype.hasOwnProperty.call(
+        followingList,
+        'medium_priority_list'
+      )
+    ) {
+      const alreadyFollowing = helpers.itemExists(
+        followingList.medium_priority_list,
+        followingUserID
+      );
+      if (alreadyFollowing) return true;
+    }
+
+    //* checking whether low priority list exists
+    if (
+      Object.prototype.hasOwnProperty.call(followingList, 'low_priority_list')
+    ) {
+      const alreadyFollowing = helpers.itemExists(
+        followingList.low_priority_list,
+        followingUserID
+      );
+      if (alreadyFollowing) return true;
+    }
+
+    return false;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const unfollowUser = async (userID, followingUserID) => {
+  try {
+    await gossipInteractionDAL.removeUserFromHighPriorityList(
+      userID,
+      followingUserID
+    );
+    await gossipInteractionDAL.removeUserFromMediumPriorityList(
+      userID,
+      followingUserID
+    );
+    await gossipInteractionDAL.removeUserFromLowPriorityList(
+      userID,
+      followingUserID
+    );
+    return 'un-followed';
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const followOrUnfollowUser = async (userID, followOrUnfollowUserID) => {
+  try {
+    const userFollowing = await checkWhetherUserFollowing(
+      userID,
+      followOrUnfollowUserID
+    );
+    if (!userFollowing) {
+      return await gossipInteractionDAL.updateFollowingList(
+        userID,
+        followOrUnfollowUserID
+      );
+    }
+    return await unfollowUser(userID, followOrUnfollowUserID);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const retrieveBareMinUserDetails = async (arrayOfUserID) => {
+  const arrayOfUserDetails = [];
+  for (const userID of arrayOfUserID) {
+    const userDetails = await gossipInteractionDAL.queryBareMinUserID(
+      userID.author_id
+    );
+    arrayOfUserDetails.push(userDetails);
+  }
+  return arrayOfUserDetails;
+};
+
+const retrieveUserFollowingList = async (userID, skip) => {
+  try {
+    const userFollowingList =
+      await gossipInteractionDAL.queryUsersFollowingList(userID);
+    const followingList = userFollowingList.following_list;
+    let result = [];
+
+    //* checking whether high priority list exists
+    if (
+      Object.prototype.hasOwnProperty.call(followingList, 'high_priority_list')
+    ) {
+      result = followingList.high_priority_list;
+      const trimedResult = result.slice(skip, skip + 15);
+      if (trimedResult.length >= 15)
+        return await retrieveBareMinUserDetails(trimedResult);
+    }
+
+    //* checking whether medium priority list exists
+    if (
+      Object.prototype.hasOwnProperty.call(
+        followingList,
+        'medium_priority_list'
+      )
+    ) {
+      result = result.concat(followingList.medium_priority_list);
+      const trimedResult = result.slice(skip, skip + 15);
+      if (trimedResult.length >= 15)
+        return await retrieveBareMinUserDetails(trimedResult);
+    }
+
+    //* checking whether low priority list exists
+    if (
+      Object.prototype.hasOwnProperty.call(followingList, 'low_priority_list')
+    ) {
+      result.concat(followingList.low_priority_list);
+      return await retrieveBareMinUserDetails(result.slice(skip, skip + 15));
+    }
+
+    return await retrieveBareMinUserDetails(result.slice(skip, skip + 15));
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 module.exports = {
   regossipGossip,
   retrieveMostLikedGossips,
@@ -325,4 +469,7 @@ module.exports = {
   retrieveBookmarkedGossips,
   retrieveRegossipedGossips,
   retrieveUserDetails,
+  checkWhetherUserFollowing,
+  followOrUnfollowUser,
+  retrieveUserFollowingList,
 };

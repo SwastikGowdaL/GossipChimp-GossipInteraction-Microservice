@@ -230,6 +230,9 @@ const queryBookmarkedGossipsID = async (userID) =>
 const queryRegossipedGossipsID = async (userID) =>
   Users.find({ _id: userID }, { regossiped_gossips: 1 });
 
+const queryUsersFollowingList = async (userID) =>
+  FollowingList.findOne({ user_id: userID });
+
 const updateFollowingList = async (userID, followingUserID) =>
   FollowingList.updateOne(
     {
@@ -239,14 +242,55 @@ const updateFollowingList = async (userID, followingUserID) =>
       $addToSet: {
         'following_list.medium_priority_list': {
           author_id: followingUserID,
-          interaction_points: 0,
         },
       },
     }
   );
 
-const queryUsersFollowingList = async (userID) =>
-  FollowingList.findOne({ user_id: userID });
+const removeUserFromHighPriorityList = async (userID, followingUserID) =>
+  FollowingList.updateOne(
+    {
+      user_id: userID,
+    },
+    {
+      $pull: {
+        'following_list.high_priority_list': {
+          author_id: followingUserID,
+        },
+      },
+    }
+  );
+
+const removeUserFromMediumPriorityList = async (userID, followingUserID) =>
+  FollowingList.updateOne(
+    {
+      user_id: userID,
+    },
+    {
+      $pull: {
+        'following_list.medium_priority_list': {
+          author_id: followingUserID,
+        },
+      },
+    }
+  );
+
+const removeUserFromLowPriorityList = async (userID, followingUserID) =>
+  FollowingList.updateOne(
+    {
+      user_id: userID,
+    },
+    {
+      $pull: {
+        'following_list.low_priority_list': {
+          author_id: followingUserID,
+        },
+      },
+    }
+  );
+
+const queryBareMinUserID = async (userID) =>
+  Users.findOne({ _id: userID }, { name: 1, profile_pic: 1, tagline: 1 });
 
 module.exports = {
   updatePostLikes,
@@ -286,4 +330,8 @@ module.exports = {
   queryRegossipedGossipsID,
   updateFollowingList,
   queryUsersFollowingList,
+  removeUserFromHighPriorityList,
+  removeUserFromMediumPriorityList,
+  removeUserFromLowPriorityList,
+  queryBareMinUserID,
 };
