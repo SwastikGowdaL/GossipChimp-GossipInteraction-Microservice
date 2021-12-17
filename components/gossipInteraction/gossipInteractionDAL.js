@@ -1,5 +1,4 @@
 require('../../db/mongoose');
-const { error } = require('console');
 const Gossip = require('../../models/gossip');
 const Users = require('../../models/users');
 const FollowingList = require('../../models/followingList');
