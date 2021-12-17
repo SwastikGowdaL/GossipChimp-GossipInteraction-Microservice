@@ -1,7 +1,9 @@
 require('../../db/mongoose');
+const { error } = require('console');
 const Gossip = require('../../models/gossip');
 const Users = require('../../models/users');
 const FollowingList = require('../../models/followingList');
+const FollowersList = require('../../models/followersList');
 
 const redisClient = require('./helpers/redisClient');
 
@@ -292,6 +294,39 @@ const removeUserFromLowPriorityList = async (userID, followingUserID) =>
 const queryBareMinUserID = async (userID) =>
   Users.findOne({ _id: userID }, { name: 1, profile_pic: 1, tagline: 1 });
 
+const updateFollowersList = async (userID, followerID) =>
+  FollowersList.updateOne(
+    { user_id: userID },
+    { $addToSet: { followers_list: followerID } }
+  );
+
+const removeUserFromFollowersList = async (userID, followerID) =>
+  FollowersList.updateOne(
+    { user_id: userID },
+    { $pull: { followers_list: followerID } }
+  );
+
+const queryFollowersList = async (userID) =>
+  FollowersList.find({ user_id: userID }, { followers_list: 1 });
+
+const checkIfAlreadyLiked = async (postID, userID) =>
+  Gossip.find({
+    _id: postID,
+    likes: { $in: [`${userID}`] },
+  }).count();
+
+const checkIfAlreadyBookmarked = async (postID, userID) =>
+  Gossip.find({
+    _id: postID,
+    bookmarks: { $in: [`${userID}`] },
+  }).count();
+
+const checkIfAlreadyReported = async (postID, userID) =>
+  Gossip.find({
+    _id: postID,
+    reports: { $in: [`${userID}`] },
+  }).count();
+
 module.exports = {
   updatePostLikes,
   updatePostShares,
@@ -334,4 +369,10 @@ module.exports = {
   removeUserFromMediumPriorityList,
   removeUserFromLowPriorityList,
   queryBareMinUserID,
+  updateFollowersList,
+  removeUserFromFollowersList,
+  queryFollowersList,
+  checkIfAlreadyLiked,
+  checkIfAlreadyBookmarked,
+  checkIfAlreadyReported,
 };

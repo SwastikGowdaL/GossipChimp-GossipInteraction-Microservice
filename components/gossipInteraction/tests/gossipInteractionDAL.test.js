@@ -336,6 +336,30 @@ test('query bare min user details', async () => {
   const userDetails = await gossipInteractionDAL.queryBareMinUserID(
     '617fc7e5e8bee9ff94617ab0'
   );
-  console.log(userDetails);
   expect(userDetails).not.toBeFalsy();
+});
+
+test('update followers list', async () => {
+  const followerList = await gossipInteractionDAL.updateFollowersList(
+    '617fc7e5e8bee9ff94617ab0',
+    '617fc7e5e8bee9ff94617ab2'
+  );
+  expect(followerList).not.toBeFalsy();
+});
+
+test('remove users from followers list', async () => {
+  const follower = await gossipInteractionDAL.removeUserFromFollowersList(
+    '617fc7e5e8bee9ff94617ab0',
+    '617fc7e5e8bee9ff94617ab2'
+  );
+  expect(follower).not.toBeFalsy();
+});
+
+test('check whether gossip liked or not', async () => {
+  const gossip = await gossipInteractionDAL.checkIfAlreadyLiked(
+    '61821ec515a10999e48ac935',
+    '617fc7e5e8bee9ff94617ab0'
+  );
+  console.log(gossip);
+  expect(gossip).not.toBeFalsy();
 });

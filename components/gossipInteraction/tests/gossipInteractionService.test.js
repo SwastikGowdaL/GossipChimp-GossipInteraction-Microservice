@@ -175,6 +175,37 @@ test('retrieve user following list', async () => {
       '617fc7e5e8bee9ff94617ab0',
       1
     );
-  console.log(followingList);
   expect(followingList).not.toBeFalsy();
+});
+
+test('retrieve followers list', async () => {
+  const followersList = await gossipInteractionService.retrieveFollowersList(
+    '617fc7e5e8bee9ff94617ab2',
+    0
+  );
+  expect(followersList).not.toBeFalsy();
+});
+
+test('like of unlike gossip', async () => {
+  const gossip = await gossipInteractionService.likeOrUnlikeGossip(
+    '617fa207f6627d2599288c30',
+    '617fc7e5e8bee9ff94617ab2'
+  );
+  expect(gossip).not.toBeFalsy();
+});
+
+test('bookmark of unbookmark gossip', async () => {
+  const gossip = await gossipInteractionService.bookmarkOrUnbookmarkGossip(
+    '617fa207f6627d2599288c30',
+    '617fc7e5e8bee9ff94617ab2'
+  );
+  expect(gossip).not.toBeFalsy();
+});
+
+test('report of unreport gossip', async () => {
+  const gossip = await gossipInteractionService.reportOrUnreportGossip(
+    '617fa207f6627d2599288c30',
+    '617fc7e5e8bee9ff94617ab2'
+  );
+  expect(gossip).not.toBeFalsy();
 });

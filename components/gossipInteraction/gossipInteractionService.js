@@ -291,7 +291,6 @@ const retrieveUserDetails = async (userID) => {
     let userDetails = await gossipInteractionDAL.queryUserDetails(userID);
     userDetails = JSON.parse(JSON.stringify(userDetails));
     delete userDetails.password;
-    delete userDetails._id;
     delete userDetails.liked_gossips;
     delete userDetails.commented_gossips;
     delete userDetails.reported_gossips;
@@ -383,11 +382,19 @@ const followOrUnfollowUser = async (userID, followOrUnfollowUserID) => {
       followOrUnfollowUserID
     );
     if (!userFollowing) {
+      await gossipInteractionDAL.updateFollowersList(
+        followOrUnfollowUserID,
+        userID
+      );
       return await gossipInteractionDAL.updateFollowingList(
         userID,
         followOrUnfollowUserID
       );
     }
+    await gossipInteractionDAL.removeUserFromFollowersList(
+      followOrUnfollowUserID,
+      userID
+    );
     return await unfollowUser(userID, followOrUnfollowUserID);
   } catch (err) {
     console.log(err);
@@ -439,11 +446,75 @@ const retrieveUserFollowingList = async (userID, skip) => {
     if (
       Object.prototype.hasOwnProperty.call(followingList, 'low_priority_list')
     ) {
-      result.concat(followingList.low_priority_list);
+      // file deepcode ignore PureMethodReturnValueIgnored: <please specify a reason of ignoring this>
+      result = result.concat(followingList.low_priority_list);
       return await retrieveBareMinUserDetails(result.slice(skip, skip + 15));
     }
 
     return await retrieveBareMinUserDetails(result.slice(skip, skip + 15));
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const retrieveFollowerDetails = async (arrayOfUserID) => {
+  const result = [];
+  for (const userID of arrayOfUserID) {
+    const userDetails = await retrieveUserDetails(userID);
+    result.push(userDetails);
+  }
+  return result;
+};
+
+const retrieveFollowersList = async (userID, skip) => {
+  try {
+    const followersList = await gossipInteractionDAL.queryFollowersList(userID);
+    let result = followersList[0].followers_list;
+    result = result.slice(skip, 10);
+    return await retrieveFollowerDetails(result);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const likeOrUnlikeGossip = async (postID, userID) => {
+  try {
+    const gossipLiked = await gossipInteractionDAL.checkIfAlreadyLiked(
+      postID,
+      userID
+    );
+    if (gossipLiked) {
+      return await unlikePost(postID, userID);
+    }
+    return await likeGossip(postID, userID);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const bookmarkOrUnbookmarkGossip = async (postID, userID) => {
+  try {
+    const gossipBookmarked =
+      await gossipInteractionDAL.checkIfAlreadyBookmarked(postID, userID);
+    if (gossipBookmarked) {
+      return await unbookmarkPost(postID, userID);
+    }
+    return await bookmarkGossip(postID, userID);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const reportOrUnreportGossip = async (postID, userID) => {
+  try {
+    const gossipReported = await gossipInteractionDAL.checkIfAlreadyReported(
+      postID,
+      userID
+    );
+    if (gossipReported) {
+      return await unreportPost(postID, userID);
+    }
+    return await reportGossip(postID, userID);
   } catch (err) {
     console.log(err);
   }
@@ -472,4 +543,8 @@ module.exports = {
   checkWhetherUserFollowing,
   followOrUnfollowUser,
   retrieveUserFollowingList,
+  retrieveFollowersList,
+  likeOrUnlikeGossip,
+  bookmarkOrUnbookmarkGossip,
+  reportOrUnreportGossip,
 };
