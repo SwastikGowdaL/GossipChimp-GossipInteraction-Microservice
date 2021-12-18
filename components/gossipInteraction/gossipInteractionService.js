@@ -382,6 +382,11 @@ const followOrUnfollowUser = async (userID, followOrUnfollowUserID) => {
       followOrUnfollowUserID
     );
     if (!userFollowing) {
+      await gossipInteractionDAL.incOrDecFollowingCount(userID, 1);
+      await gossipInteractionDAL.incOrDecFollowersCount(
+        followOrUnfollowUserID,
+        1
+      );
       await gossipInteractionDAL.updateFollowersList(
         followOrUnfollowUserID,
         userID
@@ -391,6 +396,11 @@ const followOrUnfollowUser = async (userID, followOrUnfollowUserID) => {
         followOrUnfollowUserID
       );
     }
+    await gossipInteractionDAL.incOrDecFollowingCount(userID, -1);
+    await gossipInteractionDAL.incOrDecFollowersCount(
+      followOrUnfollowUserID,
+      -1
+    );
     await gossipInteractionDAL.removeUserFromFollowersList(
       followOrUnfollowUserID,
       userID

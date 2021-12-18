@@ -360,6 +360,21 @@ test('check whether gossip liked or not', async () => {
     '61821ec515a10999e48ac935',
     '617fc7e5e8bee9ff94617ab0'
   );
-  console.log(gossip);
   expect(gossip).not.toBeFalsy();
+});
+
+test('increment or decrement following count', async () => {
+  const following = await gossipInteractionDAL.incOrDecFollowingCount(
+    '617fc7e5e8bee9ff94617ab2',
+    1
+  );
+  expect(following).not.toBeFalsy();
+});
+
+test('increment or decrement followers count', async () => {
+  const followers = await gossipInteractionDAL.incOrDecFollowersCount(
+    '617fc7e5e8bee9ff94617ab2',
+    1
+  );
+  expect(followers).not.toBeFalsy();
 });

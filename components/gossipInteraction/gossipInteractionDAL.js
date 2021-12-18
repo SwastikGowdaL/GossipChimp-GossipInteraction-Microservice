@@ -326,6 +326,16 @@ const checkIfAlreadyReported = async (postID, userID) =>
     reports: { $in: [`${userID}`] },
   }).count();
 
+const incOrDecFollowingCount = async (userID, number) =>
+  Users.findByIdAndUpdate(userID, {
+    $inc: { following: number },
+  });
+
+const incOrDecFollowersCount = async (userID, number) =>
+  Users.findByIdAndUpdate(userID, {
+    $inc: { followers: number },
+  });
+
 module.exports = {
   updatePostLikes,
   updatePostShares,
@@ -374,4 +384,6 @@ module.exports = {
   checkIfAlreadyLiked,
   checkIfAlreadyBookmarked,
   checkIfAlreadyReported,
+  incOrDecFollowingCount,
+  incOrDecFollowersCount,
 };
