@@ -524,6 +524,19 @@ const reportOrUnreportGossip = async (postID, userID) => {
     if (gossipReported) {
       return await unreportPost(postID, userID);
     }
+    const postDetails = await gossipInteractionDAL.queryGossip(postID);
+
+    const userFollowing = await checkWhetherUserFollowing(
+      userID,
+      postDetails.author_id
+    );
+    if (userFollowing) {
+      await unfollowUser(userID, postDetails.author_id);
+      await gossipInteractionDAL.addUserToLowPriorityList(
+        userID,
+        postDetails.author_id
+      );
+    }
     return await reportGossip(postID, userID);
   } catch (err) {
     console.log(err);

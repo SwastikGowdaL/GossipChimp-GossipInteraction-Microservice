@@ -336,6 +336,20 @@ const incOrDecFollowersCount = async (userID, number) =>
     $inc: { followers: number },
   });
 
+const addUserToLowPriorityList = async (userID, followingUserID) =>
+  FollowingList.updateOne(
+    {
+      user_id: userID,
+    },
+    {
+      $addToSet: {
+        'following_list.low_priority_list': {
+          author_id: followingUserID,
+        },
+      },
+    }
+  );
+
 module.exports = {
   updatePostLikes,
   updatePostShares,
@@ -386,4 +400,5 @@ module.exports = {
   checkIfAlreadyReported,
   incOrDecFollowingCount,
   incOrDecFollowersCount,
+  addUserToLowPriorityList,
 };

@@ -378,3 +378,11 @@ test('increment or decrement followers count', async () => {
   );
   expect(followers).not.toBeFalsy();
 });
+
+test('add user to low priority list', async () => {
+  const user = await gossipInteractionDAL.addUserToLowPriorityList(
+    '617fc7e5e8bee9ff94617ab0',
+    '617fc7e5e8bee9ff94617ab1'
+  );
+  expect(user).not.toBeFalsy();
+});
