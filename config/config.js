@@ -8,4 +8,7 @@ module.exports = {
 
   //* auth key for requests
   AUTH_KEY: process.env.AUTH_KEY,
+
+  //* port number
+  PORT: process.env.PORT,
 };

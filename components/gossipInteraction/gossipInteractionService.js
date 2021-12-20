@@ -543,6 +543,14 @@ const reportOrUnreportGossip = async (postID, userID) => {
   }
 };
 
+const retrieveGossipDetails = async (postID) => {
+  try {
+    return await gossipInteractionDAL.queryGossip(postID);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 module.exports = {
   regossipGossip,
   retrieveMostLikedGossips,
@@ -570,4 +578,5 @@ module.exports = {
   likeOrUnlikeGossip,
   bookmarkOrUnbookmarkGossip,
   reportOrUnreportGossip,
+  retrieveGossipDetails,
 };

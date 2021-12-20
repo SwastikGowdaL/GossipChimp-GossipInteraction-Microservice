@@ -21,6 +21,7 @@
   "homepage": "https://github.com/SwastikGowdaL/GossipChimp-GossipInteraction-Microservice#readme",
   "dependencies": {
     "dotenv": "^10.0.0",
+    "express": "^4.17.2",
     "mongodb": "^4.2.1",
     "mongoose": "^6.1.0",
     "redis": "^3.1.2",
